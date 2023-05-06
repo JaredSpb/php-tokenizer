@@ -67,10 +67,30 @@ while( $token = $stream() ){
 # Token has type `NON_SPACE_STRING` and its value is `b` at offset `2`
 ```
 
-
 When not rules matched, the `UnknownTokenException` is thrown. This exception is a token itself.
 It has its type set to `NULL` but yet allows accessing the `value` and `offset` properties.
 
+Stream might launch an optional callback to notify external code that the token was required from the stream:
+
+```php
+$data = 'abc';
+$stream = (new Falloff\Tokenizer\Factory(['CHARACTER' => '/\\G./']))->getStream($data);
+$stream->onTokenRequest( function( Falloff\Tokenizer\Token $token ){
+    print "Token with value of `{$token->value}` was fetched from the stream\n";
+} );
+
+while($stream()){};
+
+// The output is:
+# Token with value of `a`
+# Token with value of `b`
+# Token with value of `c`
+
+```
+
+The callback return value is ignored. 
+
+The `UnknownTokenException` does not trigger this behaviour.
 
 */
 // This file provides documentation only.

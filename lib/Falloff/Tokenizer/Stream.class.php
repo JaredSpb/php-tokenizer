@@ -9,6 +9,7 @@ class Stream{
 	protected int $offset = 0;
 	protected string $data;
 	protected Token $current_token;
+	protected ?\Closure $callback;
 
 	function __construct( string $string ){
 		$this->data = $string;
@@ -35,6 +36,9 @@ class Stream{
 				// Advancing offset
 				$this->offset += strlen($matches[0][0]);
 
+				if( !empty( $this->callback ) )
+					($this->callback)( $token );
+
 				return $token;
 			}
 		}
@@ -57,6 +61,10 @@ class Stream{
 
 	function tail(){
 		return substr($this->data, $this->offset);
+	}
+
+	function onTokenRequest( callable $fn ){
+		$this->callback = \Closure::fromCallable( $fn );
 	}
 
 	function __invoke(){

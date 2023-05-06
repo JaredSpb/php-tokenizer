@@ -116,5 +116,22 @@ class TokenizerTest extends TestCase
 
     }
 
+    public function testNotify(): void {
+
+    	$data = 'abcde';
+    	$arr = str_split($data);
+
+		$stream = (new Factory(['CHARACTER' => '/\\G./']))->getStream($data);
+
+		$stream->onTokenRequest( function( $token ) use( $arr ) {
+
+			$this->assertEquals( $token->value, $arr[ $token->offset ] );
+			
+		} );
+
+		while($stream()){};
+
+    }
+
 }
 

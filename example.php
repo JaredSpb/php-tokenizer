@@ -85,3 +85,24 @@ try{
 
 $token = $stream(); // Fetching 'a' symbol
 print "Got a regular token of type `{$token->type}` with `{$token->value}` payload at offset {$token->offset}\n";
+
+print "\n";
+
+
+/**
+* @example Callback
+*/
+
+$data = 'abc';
+$stream = (new Falloff\Tokenizer\Factory(['CHARACTER' => '/\\G./']))->getStream($data);
+$stream->onTokenRequest( function( Falloff\Tokenizer\Token $token ){
+    print "Token with value of `{$token->value}` was fetched from the stream\n";
+} );
+
+while($stream()){};
+
+// The output is:
+# Token with value of `a`
+# Token with value of `b`
+# Token with value of `c`
+
