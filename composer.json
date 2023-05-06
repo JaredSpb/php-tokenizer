@@ -1,5 +1,5 @@
 {
-    "name": "JaredSpb/php-tokenizer",
+    "name": "jared-spb/php-tokenizer",
     "description": "This package provides a simple standalone regular expressions powered tokenizer.",
     "require": {
         "php": ">=7.4"
