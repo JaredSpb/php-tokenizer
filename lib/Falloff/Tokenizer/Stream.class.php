@@ -55,6 +55,10 @@ class Stream{
 
 	}
 
+	function tail(){
+		return substr($this->data, $this->offset);
+	}
+
 	function __invoke(){
 		return $this->nextToken();
 	}

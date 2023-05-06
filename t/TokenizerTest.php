@@ -106,5 +106,15 @@ class TokenizerTest extends TestCase
 
     }
 
+    public function testTail(): void {
+
+		$data = 'abcde';
+		$stream = (new Factory(['A_CHARACTER' => '/\\Ga/']))->getStream($data);
+		$stream();
+
+		$this->assertEquals( $stream->tail(), 'bcde' );
+
+    }
+
 }
 
