@@ -1,7 +1,6 @@
 # php-tokenizer
 A simple RE driven tokenizer
 
-
 This package provides a simple standalone
 regular expressions powered tokenizer.
 
@@ -26,13 +25,14 @@ while( $token = $stream->nextToken() ){
 ```
 
 *Note:* the regexps used MUST start with the `\G` assertion.
+
 *Note:* data is interpretted as UTF-8 so regexps are recommended to be provided
 with a `u` setting.
 
 Rules might be added on the fly to the factory or either the stream itself. Adding 
 rules to the factory will not affect the streams instantinated already.
 
-```
+```php
 $rules = [ 
     'NON_SPACE_STRING' => '/\\G[^\\s]+/u',
     'ANY_CHARACTER' => '/\\G./u'
@@ -64,7 +64,7 @@ while( $token = $stream() ){
 ```
 
 
-When not rules matched, the UnknownTokenException is thrown. This exception is a token itself.
-It has its type set to NULL but yet allows accessing the `value` and `offset` properties.
+When not rules matched, the `UnknownTokenException` is thrown. This exception is a token itself.
+It has its type set to `NULL` but yet allows accessing the `value` and `offset` properties.
 
 
