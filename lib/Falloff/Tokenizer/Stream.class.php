@@ -7,6 +7,8 @@ class Stream{
 	use HasRules;
 
 	protected int $offset = 0;
+	protected array $offsets = [];
+
 	protected string $data;
 	protected Token $current_token;
 	protected ?\Closure $callback;
@@ -15,10 +17,29 @@ class Stream{
 		$this->data = $string;
 	}
 
+	function skip( array $types ){
+
+		do{
+
+			$token = $this->nextToken();
+
+		} while( in_array($token->type, $types) );
+
+		return $token;
+
+	}
+
+	function rewind( int $amount = 1 ){
+		$tail = array_splice($this->offsets, count( $this->offsets ) - $amount );
+		$this->offset = $tail[0];
+	}
+
 	function nextToken(){
 
 		if( $this->offset >= strlen( $this->data ) )
 			return false;
+
+		$this->offsets[] = $this->offset;
 
 		foreach ($this->rules as $rule) {
 
