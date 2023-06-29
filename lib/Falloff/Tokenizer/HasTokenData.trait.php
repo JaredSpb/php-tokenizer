@@ -4,11 +4,11 @@ namespace Falloff\Tokenizer;
 
 trait HasTokenData {
 
-	protected ?string $type = null;
-	protected string $value;
-	protected int $offset;
+	protected readonly ?string $type;
+	protected readonly string $value;
+	protected readonly int $offset;
 
-	function __set( $what, $value ){
+	function __set( string $what, $value ) : void {
 
 		if( in_array($what, ['type','value','offset']) ){
 
@@ -24,11 +24,21 @@ trait HasTokenData {
 	}
 
 
-	function __get( $what ){
+	function __get( string $what ) {
 		if( in_array($what, ['type','value','offset']) )
 			return $this->$what;
 
 		throw new \Exception("No such field {$what} for token of type {$this->type}");
+	}
+
+	function setOffset( int $offset ) : void {
+		$this->offset = $offset;
+	}
+	function setValue( string $value ) : void {
+		$this->value = $value;
+	}
+	function setType( ?string $type ) : void {
+		$this->type = $type;
 	}
 
 }

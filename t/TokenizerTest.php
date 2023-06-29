@@ -1,7 +1,10 @@
 <?php declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
-use Falloff\Tokenizer\Factory;
-use Falloff\Tokenizer\UnknownTokenException;
+use Falloff\Tokenizer\{
+	Factory,
+	UnknownTokenException,
+	Token,
+};
 
 
 class TokenizerTest extends TestCase
@@ -123,13 +126,39 @@ class TokenizerTest extends TestCase
 
 		$stream = (new Factory(['CHARACTER' => '/\\G./']))->getStream($data);
 
-		$stream->onTokenRequest( function( $token ) use( $arr ) {
+		$stream->onTokenRequest( function( Token|UnknownTokenException $token ) use( $arr ) {
 
 			$this->assertEquals( $token->value, $arr[ $token->offset ] );
 			
 		} );
 
 		while($stream()){};
+
+    }
+
+    public function testChangeToken(): void {
+
+    	$data = 'abcde';
+
+		$stream = (new Factory(['CHARACTER' => '/\\G./']))->getStream($data);
+
+		$stream->onTokenRequest( function( Token|UnknownTokenException $token ){
+			return new Token('Q_SYMBOL','q', $token->offset);
+		} );
+
+		$this->assertEquals( $stream()->value, 'q' );
+
+
+    }
+
+    public function testThrows(): void {
+
+    	$data = 'b';
+		$stream = (new Factory(['CHARACTER' => '/\\Ga/']))->getStream($data);
+		$this->expectException(UnknownTokenException::class);
+
+		$stream();
+
 
     }
 

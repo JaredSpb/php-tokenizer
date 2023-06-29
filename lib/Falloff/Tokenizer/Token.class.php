@@ -2,7 +2,7 @@
 
 namespace Falloff\Tokenizer;
 
-class Token{
+class Token implements TokenData{
 
 	use HasTokenData;
 

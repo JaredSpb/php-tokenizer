@@ -9,6 +9,8 @@ class Stream{
 	protected int $offset = 0;
 	protected array $offsets = [];
 
+	protected bool $eof = false;
+
 	protected string $data;
 	protected Token $current_token;
 	protected ?\Closure $callback;
@@ -32,11 +34,12 @@ class Stream{
 	function rewind( int $amount = 1 ){
 		$tail = array_splice($this->offsets, count( $this->offsets ) - $amount );
 		$this->offset = $tail[0];
+		$this->eof = false;
 	}
 
 	function nextToken(){
 
-		if( $this->offset >= strlen( $this->data ) )
+		if( $this->eof )
 			return false;
 
 		$this->offsets[] = $this->offset;
@@ -55,10 +58,16 @@ class Stream{
 				);
 
 				// Advancing offset
-				$this->offset += strlen($matches[0][0]);
+				$this->offset += mb_strlen($matches[0][0]);
 
-				if( !empty( $this->callback ) )
-					($this->callback)( $token );
+				if( $this->offset >= mb_strlen( $this->data ) )
+					$this->eof = true;
+
+				if( !empty( $this->callback ) ){
+					$rv = ($this->callback)( $token );
+					if( is_object($rv) and get_class( $rv ) === Token::class )
+						$token = $rv;
+				}
 
 				return $token;
 			}
@@ -71,10 +80,13 @@ class Stream{
 		preg_match("/\G./u", $this->data, $matches, PREG_OFFSET_CAPTURE, $this->offset);
 
 		$e = new UnknownTokenException("No rules could match the character `{$matches[0][0]}` at offset `{$this->offset}` ");
-		$e->offset = $this->offset;
-		$e->value = $matches[0][0];
+		$e->setOffset($this->offset);
+		$e->setValue($matches[0][0]);
 
-		$this->offset += strlen($matches[0][0]);
+		$this->offset += mb_strlen($matches[0][0]);
+
+		if( $this->offset >= mb_strlen( $this->data ) )
+			$this->eof = true;
 
 		throw $e;
 
@@ -87,6 +99,14 @@ class Stream{
 	function onTokenRequest( callable $fn ){
 		$this->callback = \Closure::fromCallable( $fn );
 	}
+
+	function __get($name){
+		if( $name == 'eof' )
+			return $this->eof;
+
+		throw new \Exception("`$name` property does not exist for " . __CLASS__ . " instance");
+	}
+
 
 	function __invoke(){
 		return $this->nextToken();
