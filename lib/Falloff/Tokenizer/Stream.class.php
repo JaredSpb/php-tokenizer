@@ -65,8 +65,12 @@ class Stream{
 
 				if( !empty( $this->callback ) ){
 					$rv = ($this->callback)( $token );
-					if( is_object($rv) and get_class( $rv ) === Token::class )
+					if( 
+						is_object($rv) 
+						and in_array(TokenData::class, class_implements($rv))
+					){
 						$token = $rv;
+					}
 				}
 
 				return $token;
