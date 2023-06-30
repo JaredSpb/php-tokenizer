@@ -17,6 +17,7 @@ class Stream{
 
 	function __construct( string $string ){
 		$this->data = $string;
+		$this->eof = empty( $string );
 	}
 
 	function skip( array $types ){
@@ -37,10 +38,10 @@ class Stream{
 		$this->eof = false;
 	}
 
-	function nextToken(){
+	function nextToken() : ?Token{
 
 		if( $this->eof )
-			return false;
+			return null;
 
 		$this->offsets[] = $this->offset;
 

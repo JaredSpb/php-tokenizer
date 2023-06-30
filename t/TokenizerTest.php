@@ -39,7 +39,7 @@ class TokenizerTest extends TestCase
 			$invoke = true;
 		}
 
-		$this->assertTrue( $stream->nextToken() === false );		
+		$this->assertEquals( $stream->nextToken(), null );
 
     }
 
@@ -79,7 +79,7 @@ class TokenizerTest extends TestCase
 				$this->assertEquals( $check[2], $token->offset );
 			}
 
-			$this->assertTrue( $stream->nextToken() === false );
+			$this->assertEquals( $stream->nextToken(), null );
 		}
 
     }
@@ -159,6 +159,16 @@ class TokenizerTest extends TestCase
 
 		$stream();
 
+    }
+
+    public function testNullReturnValue(): void {
+
+    	$data = '';
+		$stream = (new Factory(['CHARACTER' => '/\\Ga/']))->getStream($data);
+		
+		$this->assertEquals( $stream(), null );
+
+		$stream();
 
     }
 

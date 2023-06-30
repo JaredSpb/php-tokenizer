@@ -5,10 +5,10 @@ namespace Falloff\Tokenizer;
 trait HasTokenData {
 
 	protected readonly ?string $type;
-	protected readonly string $value;
+	protected readonly ?string $value;
 	protected readonly int $offset;
 
-	function __set( string $what, $value ) : void {
+	function __set( string $what,  $value ) : void {
 
 		if( in_array($what, ['type','value','offset']) ){
 
@@ -34,7 +34,7 @@ trait HasTokenData {
 	function setOffset( int $offset ) : void {
 		$this->offset = $offset;
 	}
-	function setValue( string $value ) : void {
+	function setValue( ?string $value ) : void {
 		$this->value = $value;
 	}
 	function setType( ?string $type ) : void {

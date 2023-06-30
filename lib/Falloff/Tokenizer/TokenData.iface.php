@@ -7,7 +7,7 @@ interface TokenData{
 	function __get( string $value );
 
 	function setOffset( int $offset ) : void;
-	function setValue( string $value ) : void;
+	function setValue( ?string $value ) : void;
 	function setType( ?string $type ) : void;
 }
 
