@@ -4,6 +4,12 @@ A simple RE driven tokenizer
 This package provides a simple standalone
 regular expressions powered tokenizer.
 
+## Installation
+
+`composer require jared/php-tokenizer`
+
+## Usage
+
 The example usage:
 
 ```php
